@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Launch Radar</title>
+<link rel="stylesheet" href="radar.css">
+</head>
+<body>
+<header class="masthead">
+  <p class="kicker">DefiLlama snapshot · 14 November 2026</p>
+  <h1>Token Launch Radar</h1>
+  <p class="lede">Every protocol that records no token, ranked by what its launch would be worth if its record stayed as it is. Pick a row to see the workings and the farm plan.</p>
+  <p class="summary" id="summaryLine">Loading the board…</p>
+</header>
+
+<main>
+  <section class="controls" aria-label="Board controls">
+    <label>Search <input id="q" type="search" placeholder="Protocol or slug" autocomplete="off"></label>
+    <label>Category <select id="category"><option value="">All categories</option></select></label>
+    <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+    <label>Sort by
+      <select id="sort">
+        <option value="rank">Implied value (board rank)</option>
+        <option value="tvl">TVL, highest first</option>
+        <option value="change">7-day change, highest first</option>
+        <option value="age">Longest running first</option>
+        <option value="name">Name, A to Z</option>
+      </select>
+    </label>
+    <label class="check"><input id="watchlistOnly" type="checkbox"> Watchlist only</label>
+    <button id="reset" type="button">Reset filters</button>
+  </section>
+
+  <section id="detail" class="detail" hidden></section>
+
+  <section class="boardWrap">
+    <table id="board">
+      <thead>
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Protocol</th>
+          <th scope="col">Category</th>
+          <th scope="col">Chains</th>
+          <th scope="col" class="num">TVL</th>
+          <th scope="col" class="num">7-day</th>
+          <th scope="col" class="num">Running</th>
+          <th scope="col" class="num">Implied value</th>
+          <th scope="col">Note</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="empty" hidden>No protocols match these filters. Loosen a filter or reset them.</p>
+    <p class="count" id="countLine"></p>
+  </section>
+
+  <section class="method" aria-label="How the radar works">
+    <h2>How the radar works</h2>
+    <p class="formula">Implied value = TVL × category multiple × growth × age × chains</p>
+    <ul>
+      <li><strong>Category multiple.</strong> The median market-cap-to-TVL ratio of the protocols in the same category whose token already trades, winsorized and shrunk toward the global median. Sparse categories take the global median outright.</li>
+      <li><strong>Growth.</strong> The 7-day TVL change, clamped and passed through a tanh curve, so one wild week cannot own the board.</li>
+      <li><strong>Age.</strong> A seasoning premium for running longer with no token, easing back after year two. Unknown listing dates stay neutral.</li>
+      <li><strong>Chains.</strong> A small log premium for multi-chain reach, capped.</li>
+      <li><strong>The screen.</strong> Wrapped, staked, bridged and exchange products are set aside, not ranked: they are not protocols waiting on a launch of their own. The 144 set aside are listed below, each with its reason.</li>
+    </ul>
+    <p>Limits, stated plainly: the snapshot carries no yield, no per-chain TVL and no launch history, so the model uses only what the snapshot holds. “Records no token” means the record carries no token — a protocol may still have one its record does not carry. An implied value is a conditional claim, never a prediction that a token launches, or when.</p>
+  </section>
+
+  <section class="aside" aria-label="Set aside">
+    <h2>Set aside: 144 protocols</h2>
+    <p>These record no token but fail the launch screen, so they are not ranked. The reason names the rule that fired.</p>
+    <ul id="asideList" class="asideList"></ul>
+  </section>
+</main>
+
+<footer>
+  <p>Token Launch Radar · built from the sealed DefiLlama snapshot of 14 November 2026 · no live data, no network · implied values are this radar’s own claims.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="radar.js"></script>
+</body>
+</html>
